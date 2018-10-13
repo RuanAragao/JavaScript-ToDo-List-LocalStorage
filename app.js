@@ -54,6 +54,10 @@ function removeToDo(index) {
 
 renderToDos(todo_list);
 btn_add_todo.onclick = function() {
-    addToDo(input_item.value);
-    input_item.value = "";
+    if (input_item.value != "") {
+        addToDo(input_item.value);
+        input_item.value = "";
+    } else {
+        alert("Insert a item");
+    }
 }
