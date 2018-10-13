@@ -2,8 +2,6 @@ var list = document.getElementById("list");
 var input_item = document.getElementById("input-item");
 var btn_add_todo = document.getElementById("btn-add-todo");
 
-var todo_list = [];
-
 const storageName = 'todo_list';
 var storage = {
     lsName: storageName,
@@ -11,31 +9,52 @@ var storage = {
     save: function(data) {
         localStorage.setItem(this.lsName, JSON.stringify(data));
     },
-    read: function(index) {
+    read: function(key) {
         let data = localStorage.getItem(this.lsName);
         return JSON.parse(data);
     }
 };
 
-function renderToDos(todo_list) {
+var todo_list = storage.read() || [];
+
+function renderToDos() {
+    let todo_list = storage.read() || [];
     list.innerHTML = "";
     for (todo of todo_list) {
         let li = document.createElement('li');
         let item = document.createTextNode(todo);
-        li.appendChild(item);
+
+        let btnDelete = document.createElement('a');
+        btnDelete.setAttribute('href', '#');
+
+        let indexToDo = todo_list.indexOf(todo);
+        btnDelete.setAttribute('onclick', 'removeToDo(' + indexToDo + ')');
+        let btnDeleteCaption = document.createTextNode('Remove'); 
+
+        li.appendChild(item);       
+        btnDelete.appendChild(btnDeleteCaption);
+        li.appendChild(btnDelete);
+        
         list.appendChild(li);
+
     }
 }
 
-function addTodo(todo) {
+function addToDo(todo) {
     todo_list.push(todo);
     storage.save(todo_list);
-    renderToDos(todo_list);
+    renderToDos();
+}
+
+function removeToDo(index) {
+    todo_list.splice(index, 1);
+    storage.save(todo_list);
+    renderToDos();
 }
 
 
 renderToDos(todo_list);
 btn_add_todo.onclick = function() {
-    addTodo(input_item.value);
+    addToDo(input_item.value);
     input_item.value = "";
 }
