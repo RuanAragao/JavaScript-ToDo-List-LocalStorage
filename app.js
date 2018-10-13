@@ -18,7 +18,6 @@ var storage = {
 var todo_list = storage.read() || [];
 
 function renderToDos() {
-    let todo_list = storage.read() || [];
     list.innerHTML = "";
     for (todo of todo_list) {
         let li = document.createElement('li');
